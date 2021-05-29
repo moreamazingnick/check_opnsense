@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pythonhttps://github.com/moreamazingnick/check_opnsense/blob/master/check_opnsense.py
 # -*- coding: utf-8 -*-
 
 # ------------------------------------------------------------------------------
@@ -22,8 +22,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # ------------------------------------------------------------------------------
-# Changes by MoreAmazingNick
-# Added 
+# Changes by MoreAmazingNick 2021
+# Added firmeware update search and checks for more opnsense responses
 # ------------------------------------------------------------------------------
 from __future__ import print_function
 import sys
