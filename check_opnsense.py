@@ -22,7 +22,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 # ------------------------------------------------------------------------------
-
+# Changes by MoreAmazingNick
+# Added 
+# ------------------------------------------------------------------------------
 from __future__ import print_function
 import sys
 
@@ -157,18 +159,38 @@ class CheckOPNsense:
         self.options = options
 
     def checkUpdates(self):
+        # tell opnsense to search for updates
+        refresh = self.getURL('core/firmware/check')
+        refreshdata = self.request(refresh, 'post')
+        if refreshdata['status'] != 'ok':
+            self.checkResult = NagiosState.CRITICAL
+            self.checkMessage = "Could not check for updates"
+            return 0;
+        time.sleep(20)
         url = self.getURL('core/firmware/status')
         data = self.request(url)
 
         if data['status'] == 'ok' and data['status_upgrade_action'] == 'all':
             count = data['updates']
-
+            
             self.checkResult = NagiosState.WARNING
             self.checkMessage = "{} pending updates".format(count)
 
-            if data['upgrade_needs_reboot']:
+            if data['upgrade_needs_reboot'] == '1':
                 self.checkResult = NagiosState.CRITICAL
                 self.checkMessage = "{}. Subsequent reboot required.".format(self.checkMessage)
+        elif data['status'] == 'ok' and data['status_upgrade_action'] == 'pkg':
+            self.checkResult = NagiosState.WARNING
+            self.checkMessage = "OPNsense can be upgraded, but needs a pkg upgrade first"
+            return 0
+        elif data['status'] == 'update':
+            self.checkResult = NagiosState.CRITICAL
+            self.checkMessage = data['status_msg']
+            return 0
+        elif data['status'] == 'error':
+            self.checkResult = NagiosState.CRITICAL
+            self.checkMessage = data['status_msg']
+            return 0
         else:
             self.checkMessage = "System up to date"
 
