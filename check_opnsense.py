@@ -187,6 +187,10 @@ class CheckOPNsense:
             self.checkResult = NagiosState.CRITICAL
             self.checkMessage = data['status_msg']
             return 0
+        elif data['status'] == 'upgrade':
+            self.checkResult = NagiosState.CRITICAL
+            self.checkMessage = data['status_msg']
+            return 0
         elif data['status'] == 'error':
             self.checkResult = NagiosState.CRITICAL
             self.checkMessage = data['status_msg']
